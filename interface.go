@@ -1,4 +1,4 @@
-package rwfs
+package fsx
 
 import (
 	"io/fs"
@@ -9,15 +9,19 @@ import (
 // Although this is not technically necessary,
 // it also doesn't hurt, and provides strong hints that aren't often wrong.
 
-// RWFS is an fs.FS which also supports writing to a filesystem,
-// by adding at least three additional methods: OpenFile, Mkdir, and Remove.
+// FS is an interface to a filesystem.
+// It is like stdlib's fs.FS, and includes it, and adds many additional features.
 //
-// The RWFS interface is not often seen in method signatures:
-// all the functions in this package take fs.FS as a parameter,
-// and will attempt to feature-detect RWFS,
-// erroring at runtime if the given filesystem does not support the required features.
-type RWFS interface {
-	fs.FS // RWFS is a superset of the read-only interface from the fs package.
+// fsx.FS also supports writing to a filesystem,
+// by adding at least three additional methods: OpenFile, Mkdir, and Remove.
+// It also adds additional features such as Readlink and LStat.
+//
+// The fsx.FS interface is not often seen in method signatures:
+// all the functions in this package take still take a stdlib fs.FS as a parameter,
+// and will attempt to feature-detect fsx.FS,
+// erroring at runtime if the given FS does not support the required features.
+type FS interface {
+	fs.FS // fsx.FS is a superset of the read-only interface from the fs package.
 
 	// OpenFile opens the named file, with some flags; it may be writable.
 	//
@@ -27,7 +31,19 @@ type RWFS interface {
 	Mkdir(name string, perm fs.FileMode) error
 
 	// TODO Remove(name string) error
+
+	// TODO Readlink(name string) (string, error)
+
+	// TODO Lstat(name string) (fs.FileInfo, error)
 }
+
+type (
+	File     = fs.File
+	FileInfo = fs.FileInfo
+	FileMode = fs.FileMode
+
+	StatFS = fs.StatFS
+)
 
 // Flags to OpenFile wrapping those of the underlying system. Not all
 // flags may be implemented on a given system.

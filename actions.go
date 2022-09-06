@@ -1,4 +1,4 @@
-package rwfs
+package fsx
 
 import (
 	"fmt"
@@ -53,7 +53,7 @@ func WriteFile(fsys fs.FS, name string, perm fs.FileMode, body []byte) (err erro
 // Although fs.File does not itself guarantee any write methods,
 // they can be expected to be present when the flags to OpenFile ask for a writable file.
 func OpenFile(fsys fs.FS, name string, flag int, perm fs.FileMode) (fs.File, error) {
-	if fsys2, ok := fsys.(RWFS); ok {
+	if fsys2, ok := fsys.(FS); ok {
 		return fsys2.OpenFile(name, flag, perm)
 	} else if flag == os.O_RDONLY {
 		return fsys.Open(name)
@@ -67,7 +67,7 @@ func OpenFile(fsys fs.FS, name string, flag int, perm fs.FileMode) (fs.File, err
 }
 
 func Mkdir(fsys fs.FS, name string, perm fs.FileMode) error {
-	if fsys2, ok := fsys.(RWFS); ok {
+	if fsys2, ok := fsys.(FS); ok {
 		return fsys2.Mkdir(name, perm)
 	} else {
 		return &fs.PathError{
@@ -82,7 +82,7 @@ func MkdirAll(fsys fs.FS, name string, perm fs.FileMode) error {
 	// The below code is considerably following from the function of the same name in the stdlib os package.
 	// It is simplified in several places because it ignores the possibility of non-unix-style paths.
 
-	fsys2, ok := fsys.(RWFS)
+	fsys2, ok := fsys.(FS)
 	if !ok {
 		return &fs.PathError{
 			Op:   "Mkdir",

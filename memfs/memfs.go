@@ -1,13 +1,12 @@
 package memfs
 
 import (
-	"io/fs"
 	"testing/fstest"
 
-	"github.com/warpfork/go-fsx"
+	fs "github.com/warpfork/go-fsx"
 )
 
-func RWMemFS() rwfs.RWFS {
+func MemFS() fs.FS {
 	return make(memFS)
 }
 

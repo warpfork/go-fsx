@@ -1,13 +1,12 @@
 package osfs
 
 import (
-	"io/fs"
 	"os"
 
-	"github.com/warpfork/go-fsx"
+	fs "github.com/warpfork/go-fsx"
 )
 
-func RWDirFS(dir string) rwfs.RWFS {
+func DirFS(dir string) fs.FS {
 	return dirFS(dir)
 }
 
