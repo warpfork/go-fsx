@@ -4,7 +4,7 @@ import (
 	"io/fs"
 	"os"
 
-	"github.com/warpfork/go-rwfs"
+	"github.com/warpfork/go-fsx"
 )
 
 func RWDirFS(dir string) rwfs.RWFS {
