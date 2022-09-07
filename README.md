@@ -2,11 +2,12 @@ go-fsx -- golang filesystems interfaces, extended
 =================================================
 
 Golang introduced the [`io/fs.FS`](https://pkg.go.dev/io/fs) interface in Go 1.16.
+[`go-fsx`](https://pkg.go.dev/github.com/warpfork/go-fsx) extends it.
 
-While having this interface was a very welcome improvement to the golang library ecosystem,
-it doesn't go far enough:
+While having the standard library's `fs.FS` interface was a very welcome improvement to the golang library ecosystem,
+it doesn't (yet) go far enough:
 the interface only covers read operations (no write support at all!),
-and many features in common filesystems (such as understanding of symlinks) is absent.
+and many features in common filesystems (such as understanding of symlinks) are absent.
 
 This package, `fsx`, takes the style of the `io/fs` package, and extends it with more features:
 
@@ -14,6 +15,9 @@ This package, `fsx`, takes the style of the `io/fs` package, and extends it with
 - `fsx` provides the ability to create directories
 - `fsx` provides the ability to delete files and directories
 - `fsx` provides features for reading symlinks, and creating them (WIP)
+
+Everything is done with the intention of feeling normal, and being a smooth extension of what we already know:
+
 - `fsx` does everything it does in the functional idiom already used in `io/fs`, so it feels "natural" -- `fsx` has just got _more_ of it.
 - `fsx` still uses `fs.FileInfo`, `fs.FileMode`, and `fs.File` -- no changes there.
 - All of the `fsx` functions take an `fs.FS`, and do feature detection internally -- so you can keep using `fs.FS` in code that's already passing that interface around!
