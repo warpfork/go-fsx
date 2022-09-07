@@ -6,6 +6,10 @@ import (
 	fs "github.com/warpfork/go-fsx"
 )
 
+var (
+	_ fs.FSSupportingWrite = dirFS("")
+)
+
 func DirFS(dir string) fs.FS {
 	return dirFS(dir)
 }

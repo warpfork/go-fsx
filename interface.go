@@ -5,23 +5,27 @@ import (
 	"os"
 )
 
-// We embed the interfaces from the fs package into our interfaces here.
-// Although this is not technically necessary,
-// it also doesn't hurt, and provides strong hints that aren't often wrong.
+type (
+	FS       = fs.FS
+	File     = fs.File
+	FileInfo = fs.FileInfo
+	FileMode = fs.FileMode
 
-// FS is an interface to a filesystem.
-// It is like stdlib's fs.FS, and includes it, and adds many additional features.
+	StatFS = fs.StatFS
+)
+
+// FSSupportingWrite extends FS to include functions which allow writing to the filesystem.
 //
-// fsx.FS also supports writing to a filesystem,
-// by adding at least three additional methods: OpenFile, Mkdir, and Remove.
-// It also adds additional features such as Readlink and LStat.
+// The three critical additional methods are: OpenFile, Mkdir, and Remove.
+// (For ability to write symlinks, see FSSupportingMkSymlink.)
 //
-// The fsx.FS interface is not often seen in method signatures:
-// all the functions in this package take still take a stdlib fs.FS as a parameter,
-// and will attempt to feature-detect fsx.FS,
+// This interface is not often seen in method signatures:
+// all the functions in this package take still take a plain FS as a parameter,
+// and will attempt to feature-detect this interface if it is required,
 // erroring at runtime if the given FS does not support the required features.
-type FS interface {
-	fs.FS // fsx.FS is a superset of the read-only interface from the fs package.
+// (This keeps the amount of casting the programmer needs to do at a minimum.)
+type FSSupportingWrite interface {
+	fs.FS
 
 	// OpenFile opens the named file, with some flags; it may be writable.
 	//
@@ -31,19 +35,7 @@ type FS interface {
 	Mkdir(name string, perm fs.FileMode) error
 
 	// TODO Remove(name string) error
-
-	// TODO Readlink(name string) (string, error)
-
-	// TODO Lstat(name string) (fs.FileInfo, error)
 }
-
-type (
-	File     = fs.File
-	FileInfo = fs.FileInfo
-	FileMode = fs.FileMode
-
-	StatFS = fs.StatFS
-)
 
 // Flags to OpenFile wrapping those of the underlying system. Not all
 // flags may be implemented on a given system.
@@ -60,3 +52,17 @@ const (
 	O_SYNC   int = os.O_SYNC   // open for synchronous I/O.
 	O_TRUNC  int = os.O_TRUNC  // truncate regular writable file when opened.
 )
+
+type FSSupportingReadlink interface {
+	fs.FS
+
+	Readlink(name string) (string, error)
+
+	Lstat(name string) (fs.FileInfo, error)
+}
+
+type FSSupportingMkSymlink interface {
+	MkSymlink(oldname, newname string) error
+}
+
+// FUTURE: FSSupportingChown, etc.
