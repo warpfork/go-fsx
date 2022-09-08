@@ -132,3 +132,41 @@ func MkdirAll(fsys FS, name string, perm FileMode) error {
 	return nil
 
 }
+
+func Readlink(fsys FS, name string) (string, error) {
+	if fsys2, ok := fsys.(FSSupportingReadlink); ok {
+		return fsys2.Readlink(name)
+	} else {
+		return "", &stdfs.PathError{
+			Op:   "Readlink",
+			Path: name,
+			Err:  fmt.Errorf("filesystem type %T does not support Readlink", fsys),
+		}
+	}
+}
+
+func Lstat(fsys FS, name string) (FileInfo, error) {
+	if fsys2, ok := fsys.(FSSupportingReadlink); ok {
+		return fsys2.Lstat(name)
+	} else if fsys2, ok := fsys.(FSSupportingStat); ok {
+		return fsys2.Stat(name)
+	} else {
+		return nil, &stdfs.PathError{
+			Op:   "Readlink",
+			Path: name,
+			Err:  fmt.Errorf("filesystem type %T does not support Lstat nor Stat", fsys),
+		}
+	}
+}
+
+func MkSymlink(fsys FS, name, target string) error {
+	if fsys2, ok := fsys.(FSSupportingMkSymlink); ok {
+		return fsys2.MkSymlink(name, target)
+	} else {
+		return &stdfs.PathError{
+			Op:   "MkSymlink",
+			Path: name,
+			Err:  fmt.Errorf("filesystem type %T does not support MkSymlink", fsys),
+		}
+	}
+}

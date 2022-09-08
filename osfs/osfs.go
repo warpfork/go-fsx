@@ -7,7 +7,9 @@ import (
 )
 
 var (
-	_ fs.FSSupportingWrite = dirFS("")
+	_ fs.FSSupportingWrite     = dirFS("")
+	_ fs.FSSupportingReadlink  = dirFS("")
+	_ fs.FSSupportingMkSymlink = dirFS("")
 )
 
 func DirFS(dir string) fs.FS {
@@ -21,7 +23,7 @@ func (dir dirFS) Open(name string) (fs.File, error) {
 }
 
 func (dir dirFS) Stat(name string) (fs.FileInfo, error) {
-	return os.DirFS(string(dir)).(fs.StatFS).Stat(name)
+	return os.DirFS(string(dir)).(fs.FSSupportingStat).Stat(name)
 }
 
 func (dir dirFS) OpenFile(name string, flag int, perm fs.FileMode) (fs.File, error) {
@@ -30,4 +32,16 @@ func (dir dirFS) OpenFile(name string, flag int, perm fs.FileMode) (fs.File, err
 
 func (dir dirFS) Mkdir(name string, perm fs.FileMode) error {
 	return os.Mkdir(string(dir)+"/"+name, perm)
+}
+
+func (dir dirFS) Readlink(name string) (string, error) {
+	return os.Readlink(string(dir) + "/" + name)
+}
+
+func (dir dirFS) Lstat(name string) (fs.FileInfo, error) {
+	return os.Lstat(string(dir) + "/" + name)
+}
+
+func (dir dirFS) MkSymlink(name, target string) error {
+	return os.Symlink(target, string(dir)+"/"+name)
 }

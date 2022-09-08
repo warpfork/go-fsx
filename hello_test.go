@@ -14,6 +14,11 @@ func ExampleHello() {
 	body, _ := fsx.ReadFile(fsys, "hello/world.txt")
 	fmt.Printf("%s\n", body)
 
+	fsx.MkSymlink(fsys, "alink", "./hello/world.txt")
+	body, _ = fsx.ReadFile(fsys, "alink")
+	fmt.Printf("%s\n", body)
+
 	// Output:
+	// hello world!
 	// hello world!
 }

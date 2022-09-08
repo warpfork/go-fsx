@@ -11,7 +11,7 @@ type (
 	FileInfo = fs.FileInfo
 	FileMode = fs.FileMode
 
-	StatFS = fs.StatFS
+	FSSupportingStat = fs.StatFS
 )
 
 // FSSupportingWrite extends FS to include functions which allow writing to the filesystem.
@@ -62,7 +62,18 @@ type FSSupportingReadlink interface {
 }
 
 type FSSupportingMkSymlink interface {
-	MkSymlink(oldname, newname string) error
+	// MkSymlink creates a symlink on the filesystem.
+	// The name paramter is where the symlink will be created;
+	// the target becomes the body of the symlink.
+	//
+	// Note that a symlink is truly a string.
+	// Typically, the target refers to some other file or path,
+	// but there is no guarantee of this.
+	// The target string will also not be normalized in any way
+	// (e.g. if you have a sub-FS, and the target starts with "/",
+	// there is no expectation that the FS implementation do anything
+	// to normalize or process that target string).
+	MkSymlink(name, target string) error
 }
 
 // FUTURE: FSSupportingChown, etc.
