@@ -11,6 +11,8 @@ type (
 	FileInfo = fs.FileInfo
 	FileMode = fs.FileMode
 
+	WalkDirFunc = fs.WalkDirFunc
+
 	FSSupportingStat = fs.StatFS
 )
 
