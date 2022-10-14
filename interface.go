@@ -10,6 +10,7 @@ type (
 	File     = fs.File
 	FileInfo = fs.FileInfo
 	FileMode = fs.FileMode
+	DirEntry = fs.DirEntry
 
 	WalkDirFunc = fs.WalkDirFunc
 

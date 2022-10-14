@@ -14,6 +14,12 @@ func WalkDir(fsys FS, root string, fn WalkDirFunc) error {
 	return stdfs.WalkDir(fsys, root, fn)
 }
 
+// ReadDir is exactly as per stdlib io/fs.ReadDir:
+// it returns a list of directory entries sorted by filename.
+func ReadDir(fsys FS, name string) ([]DirEntry, error) {
+	return stdfs.ReadDir(fsys, name)
+}
+
 // Stat returns a FileInfo describing the named file from the file system.
 //
 // It is exactly per fs.Stat, and is in fact merely a wrapper,
