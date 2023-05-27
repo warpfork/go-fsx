@@ -175,7 +175,7 @@ func Readlink(fsys FS, name string) (string, error) {
 //
 // If the given FS implementation doesn't support FSSupportingReadlink, then this function assumes no symlinks,
 // and falls back to regular Stat.
-// If the given FS implementation also does not support StatFS, then an error is returned.
+// If the given FS implementation also does not support FSSupportingStat, then an error is returned.
 func Lstat(fsys FS, name string) (FileInfo, error) {
 	if fsys2, ok := fsys.(FSSupportingReadlink); ok {
 		return fsys2.Lstat(name)
