@@ -96,6 +96,10 @@ This package doesn't attempt to do anything regarding controlling concurrent acc
 This package doesn't provide any interfaces around FDs (file descriptors); it's just path names.
 (Working with FDs is very powerful, but considerably different than where Golang's `fs` package is oriented, and this package stays similar to its upstream.)
 
+This package does not attempt to standardize or normalize error codes in any way.
+Errors returned by this package are generally of type `*fs.PathError` -- the same as the upstream `fs` package.
+Subpackages that provide real implementations, such as `osfs` (which uses stdlib `fs` and `os`) generally return errors from the underlying code unmodified.
+
 
 License
 -------
