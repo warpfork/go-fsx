@@ -6,11 +6,12 @@ import (
 )
 
 type (
-	FS       = fs.FS
-	File     = fs.File
-	FileInfo = fs.FileInfo
-	FileMode = fs.FileMode
-	DirEntry = fs.DirEntry
+	FS        = fs.FS
+	File      = fs.File
+	FileInfo  = fs.FileInfo
+	FileMode  = fs.FileMode
+	DirEntry  = fs.DirEntry
+	PathError = fs.PathError
 
 	WalkDirFunc = fs.WalkDirFunc
 

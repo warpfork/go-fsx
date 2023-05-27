@@ -51,7 +51,7 @@ func WriteFile(fsys FS, name string, perm FileMode, body []byte) (err error) {
 		}
 		return
 	}
-	return &stdfs.PathError{
+	return &PathError{
 		Op:   "WriteFile",
 		Path: name,
 		Err:  fmt.Errorf("filesystem type %T did not correctly support OpenFile for writable files", fsys),
@@ -70,7 +70,7 @@ func OpenFile(fsys FS, name string, flag int, perm FileMode) (File, error) {
 	} else if flag == os.O_RDONLY {
 		return fsys.Open(name)
 	} else {
-		return nil, &stdfs.PathError{
+		return nil, &PathError{
 			Op:   "OpenFile",
 			Path: name,
 			Err:  fmt.Errorf("filesystem type %T does not support OpenFile", fsys),
@@ -85,7 +85,7 @@ func Mkdir(fsys FS, name string, perm FileMode) error {
 	if fsys2, ok := fsys.(FSSupportingWrite); ok {
 		return fsys2.Mkdir(name, perm)
 	} else {
-		return &stdfs.PathError{
+		return &PathError{
 			Op:   "Mkdir",
 			Path: name,
 			Err:  fmt.Errorf("filesystem type %T does not support Mkdir", fsys),
@@ -102,7 +102,7 @@ func MkdirAll(fsys FS, name string, perm FileMode) error {
 
 	fsys2, ok := fsys.(FSSupportingWrite)
 	if !ok {
-		return &stdfs.PathError{
+		return &PathError{
 			Op:   "Mkdir",
 			Path: name,
 			Err:  fmt.Errorf("filesystem type %T does not support Mkdir", fsys),
@@ -115,7 +115,7 @@ func MkdirAll(fsys FS, name string, perm FileMode) error {
 		if dir.IsDir() {
 			return nil
 		}
-		return &stdfs.PathError{Op: "Mkdir", Path: name, Err: syscall.ENOTDIR}
+		return &PathError{Op: "Mkdir", Path: name, Err: syscall.ENOTDIR}
 	}
 
 	// Slow path: make sure parent exists and then call Mkdir for path.
@@ -163,7 +163,7 @@ func Readlink(fsys FS, name string) (string, error) {
 	if fsys2, ok := fsys.(FSSupportingReadlink); ok {
 		return fsys2.Readlink(name)
 	} else {
-		return "", &stdfs.PathError{
+		return "", &PathError{
 			Op:   "Readlink",
 			Path: name,
 			Err:  fmt.Errorf("filesystem type %T does not support Readlink", fsys),
@@ -182,7 +182,7 @@ func Lstat(fsys FS, name string) (FileInfo, error) {
 	} else if fsys2, ok := fsys.(FSSupportingStat); ok {
 		return fsys2.Stat(name)
 	} else {
-		return nil, &stdfs.PathError{
+		return nil, &PathError{
 			Op:   "Readlink",
 			Path: name,
 			Err:  fmt.Errorf("filesystem type %T does not support Lstat nor Stat", fsys),
@@ -197,7 +197,7 @@ func MkSymlink(fsys FS, name, target string) error {
 	if fsys2, ok := fsys.(FSSupportingMkSymlink); ok {
 		return fsys2.MkSymlink(name, target)
 	} else {
-		return &stdfs.PathError{
+		return &PathError{
 			Op:   "MkSymlink",
 			Path: name,
 			Err:  fmt.Errorf("filesystem type %T does not support MkSymlink", fsys),
