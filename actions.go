@@ -141,7 +141,7 @@ func MkdirAll(fsys FS, name string, perm FileMode) error {
 	err = fsys2.Mkdir(name, perm)
 	if err != nil {
 		// Handle arguments like "foo/." by double-checking that directory doesn't exist.
-		dir, err1 := Stat(fsys, name) // Note!  This is Lstat in the original os package code; however, this package (as yet) does not support symlinks and disregards the concept, so we have only Stat here.
+		dir, err1 := Lstat(fsys, name)
 		if err1 == nil && dir.IsDir() {
 			return nil
 		}
