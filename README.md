@@ -105,3 +105,9 @@ License
 -------
 
 You can have it as Apache-2.0 OR MIT OR BSD-3-Clause, or really anything you want.
+
+I'm finding it difficult to express this in a way that license checking machines tolerate
+(no one seems to implement "OR" as a concept; it's all just magic strings of which that's an indistinguishable substring, apparently),
+so for the purposes of machines, let's just say:
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
