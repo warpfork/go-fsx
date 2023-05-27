@@ -204,3 +204,37 @@ func MkSymlink(fsys FS, name, target string) error {
 		}
 	}
 }
+
+// IsPathFile peeks at the filesystem to see if the given path contains a regular file.
+//
+// If there is any error, false will returned.
+//
+// This is a convenience function.  Similar results can be obtained by use of Stat or other functions.
+//
+// Be mindful of TOCTOU if using this function; in many cases,
+// and especially if security and concurrent filesystem access is a concern,
+// it may be better to try open the file immediately, and then examine it.
+func IsPathFile(fsys FS, name string) (bool, error) {
+	fi, err := Stat(fsys, name)
+	if err != nil {
+		return false, err
+	}
+	return fi.Mode()&ModeType == 0, nil
+}
+
+// IsPathDir peeks at the filesystem to see if the given path contains a directory.
+//
+// If there is any error, false will returned.
+//
+// This is a convenience function.  Similar results can be obtained by use of Stat or other functions.
+//
+// Be mindful of TOCTOU if using this function; in many cases,
+// and especially if security and concurrent filesystem access is a concern,
+// it may be better to try to perform the intended operation immediately, and check the errors from that operation.
+func IsPathDir(fsys FS, name string) (bool, error) {
+	fi, err := Stat(fsys, name)
+	if err != nil {
+		return false, err
+	}
+	return fi.Mode()&ModeType == ModeDir, nil
+}
