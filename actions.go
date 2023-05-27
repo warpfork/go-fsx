@@ -78,6 +78,9 @@ func OpenFile(fsys FS, name string, flag int, perm FileMode) (File, error) {
 	}
 }
 
+// Mkdir creates a directory.
+//
+// This only works if the FS implements FSSupportingWrite; otherwise, an error will be returned.
 func Mkdir(fsys FS, name string, perm FileMode) error {
 	if fsys2, ok := fsys.(FSSupportingWrite); ok {
 		return fsys2.Mkdir(name, perm)
@@ -90,6 +93,9 @@ func Mkdir(fsys FS, name string, perm FileMode) error {
 	}
 }
 
+// MkdirAll creates a directory, and any parent directories that do not yet exist.
+//
+// This only works if the FS implements FSSupportingWrite; otherwise, an error will be returned.
 func MkdirAll(fsys FS, name string, perm FileMode) error {
 	// The below code is considerably following from the function of the same name in the stdlib os package.
 	// It is simplified in several places because it ignores the possibility of non-unix-style paths.
@@ -145,6 +151,14 @@ func MkdirAll(fsys FS, name string, perm FileMode) error {
 
 }
 
+// Readlink returns the target of a symlink, as a string.
+//
+// Note that while symlinks typically point at other files or directories, there is no guarantee of that, nor that the target actually exists.
+// A symlink target is just a string.
+//
+// If the given FS implementation doesn't support FSSupportingReadlink, an error will be returned.
+//
+// Implementers of FSSupportingReadlink should also error if Readlink is called on a non-symlink.
 func Readlink(fsys FS, name string) (string, error) {
 	if fsys2, ok := fsys.(FSSupportingReadlink); ok {
 		return fsys2.Readlink(name)
@@ -157,6 +171,11 @@ func Readlink(fsys FS, name string) (string, error) {
 	}
 }
 
+// Lstat returns FileInfo for a file, or for a symlink without traversing the link, if called on one.
+//
+// If the given FS implementation doesn't support FSSupportingReadlink, then this function assumes no symlinks,
+// and falls back to regular Stat.
+// If the given FS implementation also does not support StatFS, then an error is returned.
 func Lstat(fsys FS, name string) (FileInfo, error) {
 	if fsys2, ok := fsys.(FSSupportingReadlink); ok {
 		return fsys2.Lstat(name)
@@ -171,6 +190,9 @@ func Lstat(fsys FS, name string) (FileInfo, error) {
 	}
 }
 
+// MkSymlink creates a symlink.
+//
+// It only works on filesystems that support FSSupportingMkSymlink, and errors otherwise.
 func MkSymlink(fsys FS, name, target string) error {
 	if fsys2, ok := fsys.(FSSupportingMkSymlink); ok {
 		return fsys2.MkSymlink(name, target)
