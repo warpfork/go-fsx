@@ -40,12 +40,13 @@ type FSSupportingWrite interface {
 	// TODO Remove(name string) error
 }
 
-// Flags to OpenFile wrapping those of the underlying system. Not all
-// flags may be implemented on a given system.
-//
-// These are the same as the constants in the os package,
-// and are replicated here only for convenience.
 const (
+	// Flags to OpenFile wrapping those of the underlying system. Not all
+	// flags may be implemented on a given system.
+	//
+	// These are the same as the constants in the os package,
+	// and are replicated here only for convenience.
+
 	O_RDONLY int = os.O_RDONLY // open the file read-only.
 	O_WRONLY int = os.O_WRONLY // open the file write-only.
 	O_RDWR   int = os.O_RDWR   // open the file read-write.
@@ -56,13 +57,12 @@ const (
 	O_TRUNC  int = os.O_TRUNC  // truncate regular writable file when opened.
 )
 
-// Bits used to indicate modes and permissions of files and directories.
-//
-// These are the same as the constants in the fs package,
-// and are replicated here only for convenience.
 const (
-	// The single letters are the abbreviations
-	// used by the String method's formatting.
+	// Bits used to indicate modes and permissions of files and directories.
+	//
+	// These are the same as the constants in the fs package,
+	// and are replicated here only for convenience.
+
 	ModeDir        = fs.ModeDir        // d: is a directory
 	ModeAppend     = fs.ModeAppend     // a: append-only
 	ModeExclusive  = fs.ModeExclusive  // l: exclusive use
