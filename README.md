@@ -2,7 +2,7 @@ go-fsx -- golang filesystems interfaces, extended
 =================================================
 
 Golang introduced the [`io/fs.FS`](https://pkg.go.dev/io/fs) interface in Go 1.16.
-[`go-fsx`](https://pkg.go.dev/github.com/warpfork/go-fsx) extends it.
+[`go-fsx`](https://pkg.go.dev/github.com/warpfork/go-fsx) extends it with support for **writing** to the filesystem, handling symlinks, and also brings some conveniences.
 
 While having the standard library's `fs.FS` interface was a very welcome improvement to the golang library ecosystem,
 it doesn't (yet) go far enough:
@@ -14,14 +14,16 @@ This package, `fsx`, takes the style of the `io/fs` package, and extends it with
 - `fsx` provides the ability to write files (using `OpenFile`, which is much like the `os` package feature you're already familiar with)
 - `fsx` provides the ability to create directories
 - `fsx` provides the ability to delete files and directories
-- `fsx` provides features for reading symlinks, and creating them (WIP)
+- `fsx` provides features for reading symlinks, and creating them
 
 Everything is done with the intention of feeling normal, and being a smooth extension of what we already know:
 
 - `fsx` does everything it does in the functional idiom already used in `io/fs`, so it feels "natural" -- `fsx` has just got _more_ of it.
-- `fsx` still uses `fs.FileInfo`, `fs.FileMode`, and `fs.File` -- no changes there.
+- `fsx` still uses `fs.FileInfo`, `fs.FileMode`, and `fs.File` -- no changes there.  Everything is aliases -- easy to combine with other code.
 - All of the `fsx` functions take an `fs.FS`, and do feature detection internally -- so you can keep using `fs.FS` in code that's already passing that interface around!
 - As with `io/fs`, we attempt to add new convenient behaviors as package-scope functions... so that the `fsx.FS` interface doesn't grow over time, and bumping library versions forward is easy, even if you created your own unique implementations of the interface.
+
+Ease of use is a paramount consideration.
 
 Additionally, we alias other `fs` package features, and relevant `os` constants, into this package --
 so that you can have just one thing on your import path when working with filesystems.
@@ -81,6 +83,18 @@ In particular, https://github.com/golang/go/issues/45757 contains a very rich di
 
 If anyone is interested in taking this code further upstream, either as reference material,
 or verbatim copied, please, be my guest.
+
+
+Did you do {magic thing} with this?
+-----------------------------------
+
+No. :)
+
+This package doesn't attempt to do anything regarding controlling concurrent access to the filesystem.
+(Generally, any abstraction there would be leaky; and a leaky abstraction would be worse than none at all.)
+
+This package doesn't provide any interfaces around FDs (file descriptors); it's just path names.
+(Working with FDs is very powerful, but considerably different than where Golang's `fs` package is oriented, and this package stays similar to its upstream.)
 
 
 License
