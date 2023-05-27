@@ -1,3 +1,11 @@
+/*
+osfs contains support for FS interfaces backed by the real filesystem,
+powered by the standard library's familiar `os` package.
+
+In contrast to `os.DirFS`, this package contains very similar features,
+but also includes support for additional go-fsx features,
+such as FSSupportingWrite, FSSupportingReadlink, and FSSupportingMkSymlink.
+*/
 package osfs
 
 import (

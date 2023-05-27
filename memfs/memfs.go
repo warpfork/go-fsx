@@ -1,3 +1,6 @@
+/*
+Not yet implemented.
+*/
 package memfs
 
 import (
